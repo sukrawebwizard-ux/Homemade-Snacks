@@ -8,6 +8,13 @@ interface Props {
 }
 
 const ChooseYourSubscriptionPlan: React.FC<Props> = ({ plans, onNavigate }) => {
+  const renderFrequencyLabel = (freq: Plan["default_frequency"]) => {
+    if (freq === "weekly") return "Weekly delivery";
+    if (freq === "bi-weekly") return "Bi-weekly delivery";
+    if (freq === "monthly") return "Monthly delivery";
+    return capitalize(freq); // fallback
+  };
+
   return (
     <section className="mb-12">
       <section className="mb-8">
@@ -15,7 +22,7 @@ const ChooseYourSubscriptionPlan: React.FC<Props> = ({ plans, onNavigate }) => {
           Choose Your Subscription Plan
         </h1>
         <p className="text-sm text-slate-600">
-          Select weekly or bi-weekly delivery, and we’ll handle the rest.
+          Select weekly, bi-weekly or monthly delivery, and we’ll handle the rest.
         </p>
       </section>
 
@@ -39,12 +46,11 @@ const ChooseYourSubscriptionPlan: React.FC<Props> = ({ plans, onNavigate }) => {
                   Frequency
                 </p>
                 <p className="text-sm font-semibold text-amber-700">
-                  {plan.default_frequency === "weekly"
-                    ? "Weekly delivery"
-                    : "Bi-weekly delivery"}
+                  {renderFrequencyLabel(plan.default_frequency)}
                 </p>
               </div>
             </div>
+
             <div className="mb-3">
               <p className="text-[11px] font-semibold text-slate-700 mb-1">
                 What you get
@@ -57,6 +63,7 @@ const ChooseYourSubscriptionPlan: React.FC<Props> = ({ plans, onNavigate }) => {
                 </li>
               </ul>
             </div>
+
             <div className="mt-auto flex items-center justify-between pt-2">
               <div className="text-[11px] text-slate-500">
                 <p className="font-semibold text-slate-700 mb-0.5">
