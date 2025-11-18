@@ -30,7 +30,7 @@ const testimonials: Testimonial[] = [
     area: "Mosta",
     boxType: "Bi-weekly Family Box",
     photo: "/testimonials/jithin.png",
-    reviewImage: "/testimonials/anu.png"
+    reviewImage: "/testimonials/c1.jpg"
   },
   {
     quote:
@@ -39,7 +39,7 @@ const testimonials: Testimonial[] = [
     area: "Msida",
     boxType: "Sample Snack Box",
     photo: "/testimonials/jithin.png",
-    reviewImage: "/testimonials/jithin.png"
+    reviewImage: "/testimonials/jibin.png"
   }
 ];
 
