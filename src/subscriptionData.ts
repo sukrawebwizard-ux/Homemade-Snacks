@@ -1,5 +1,6 @@
 import { supabase } from "./lib/supabaseClient";
-export type Frequency = "weekly" | "bi-weekly";
+
+export type Frequency = "bi-weekly" | "monthly" | "sample";
 
 export type DeliveryDay =
   | "monday"
@@ -34,19 +35,20 @@ export interface Snack {
   unit: string;
   price: number;
   category: "sweets" | "spicy" | "salt";
+  image: string;
 }
 
 export const MOCK_PLANS: Plan[] = [
   {
     id: 1,
-    name: "Weekly Snack Box",
-    description: "A fresh selection of homemade snacks every week.",
+    name: "Monthly Snack Box",
+    description: "A fresh selection of homemade snacks every month.",
     price: 15.0,
-    default_frequency: "weekly",
+    default_frequency: "monthly",
     delivery_days_available: ["wednesday", "saturday"],
     items: [
-      { product_id: 10, product_name: "Unniyappam", quantity: 10 },
-      { product_id: 11, product_name: "Banana Chips", quantity: 1 },
+      { product_id: 1, product_name: "Unniyappam", quantity: 10 },
+      { product_id: 2, product_name: "Banana Chips (Sweet)", quantity: 1 },
     ],
     is_active: true,
   },
@@ -58,8 +60,24 @@ export const MOCK_PLANS: Plan[] = [
     default_frequency: "bi-weekly",
     delivery_days_available: ["saturday"],
     items: [
-      { product_id: 10, product_name: "Unniyappam", quantity: 15 },
-      { product_id: 12, product_name: "Mixture", quantity: 1 },
+      { product_id: 1, product_name: "Unniyappam", quantity: 15 },
+      { product_id: 7, product_name: "Mixture", quantity: 1 },
+    ],
+    is_active: true,
+  },
+  {
+    id: 3,
+    name: "Sample Snack Box (One-time)",
+    description:
+      "One-time sample box with a curated mix of sweet, spicy and salted snacks. No recurring subscription.",
+    price: 10.0,
+    default_frequency: "sample", // used just to satisfy the type; user sees it's one-time in the description
+    delivery_days_available: ["wednesday", "saturday"],
+    items: [
+      { product_id: 1, product_name: "Unniyappam", quantity: 6 },
+      { product_id: 2, product_name: "Banana Chips (Sweet)", quantity: 1 },
+      { product_id: 9, product_name: "Banana Chips (Salt)", quantity: 1 },
+      { product_id: 7, product_name: "Mixture", quantity: 1 },
     ],
     is_active: true,
   },
@@ -73,6 +91,7 @@ export const SNACKS: Snack[] = [
     unit: "10 pcs",
     price: 3.0,
     category: "sweets",
+    image: "/snacks/unniyappam.png"
   },
   {
     id: 2,
@@ -81,6 +100,7 @@ export const SNACKS: Snack[] = [
     unit: "150g",
     price: 3.0,
     category: "sweets",
+    image: "/snacks/banana-chips.jpg"
   },
   {
     id: 3,
@@ -89,30 +109,34 @@ export const SNACKS: Snack[] = [
     unit: "10 pcs",
     price: 3.0,
     category: "sweets",
+    image: "/snacks/achappam.jpg"
   },
   {
     id: 4,
     name: "Cutlets (Chicken)",
     description: "Spicy Kerala-style chicken cutlets.",
-    unit: "5 pcs",
-    price: 2.0,
+    unit: "3 pcs",
+    price: 5.0,
     category: "spicy",
+    image: "/snacks/cutlets.jpg"
   },
   {
     id: 5,
     name: "Cutlets (Beef)",
     description: "Homemade beef cutlets with spices.",
-    unit: "5 pcs",
-    price: 2.0,
+    unit: "3 pcs",
+    price: 5.0,
     category: "spicy",
+    image: "/snacks/cutlets.jpg"
   },
   {
     id: 6,
     name: "Cutlets (Veg)",
     description: "Mixed vegetable Kerala cutlets.",
-    unit: "5 pcs",
-    price: 2.0,
+    unit: "3 pcs",
+    price: 5.0,
     category: "spicy",
+    image: "/snacks/cutlets.jpg"
   },
   {
     id: 7,
@@ -121,6 +145,7 @@ export const SNACKS: Snack[] = [
     unit: "170g",
     price: 3.0,
     category: "spicy",
+    image: "/snacks/mixture.png"
   },
   {
     id: 8,
@@ -129,6 +154,7 @@ export const SNACKS: Snack[] = [
     unit: "150g",
     price: 3.0,
     category: "spicy",
+    image: "/snacks/pakkavada.png"
   },
   {
     id: 9,
@@ -137,6 +163,7 @@ export const SNACKS: Snack[] = [
     unit: "150g",
     price: 3.0,
     category: "salt",
+    image: "/snacks/banana-chips.jpg"
   },
   {
     id: 10,
@@ -145,8 +172,10 @@ export const SNACKS: Snack[] = [
     unit: "170g",
     price: 3.0,
     category: "salt",
-  },
+    image: "/snacks/bombe-mixture.jpg"
+  }
 ];
+
 
 export const SNACK_CUSTOMIZATION = {
   sweets: [

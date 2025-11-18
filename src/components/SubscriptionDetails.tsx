@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { supabase } from "../lib/supabaseClient";
 
 // Local types — structural, so they will work with your existing Plan shape
-export type Frequency = "weekly" | "bi-weekly";
+export type Frequency = "bi-weekly" | "monthly";
 export type DeliveryDay =
   | "monday"
   | "tuesday"
@@ -31,7 +31,6 @@ interface SubscriptionDetailsProps {
   onSuccess: () => void; // e.g. navigate to /subscribe/thank-you
 }
 
-// If you already have this constant elsewhere, you can remove this one
 const SNACK_CUSTOMIZATION = {
   sweets: [
     "Unniyappam - 10 pcs / €3",
@@ -72,7 +71,6 @@ const getNextDeliveryDate = (start: Date, dayOfWeek: DeliveryDay): string => {
   const target = map[dayOfWeek];
   const current = start.getDay(); // 0 (Sun) - 6 (Sat)
 
-  // days to add (0–6) to get the *next* chosen weekday (including today if matches)
   let diff = target - current;
   if (diff < 0) diff += 7;
 
@@ -85,12 +83,15 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
   plan,
   onSuccess,
 }) => {
+  const isSampleBox = String(plan.id) === "3";
+
   const [form, setForm] = useState({
     customer_name: "",
     phone: "",
     email: "",
     address: "",
-    frequency: (plan.default_frequency || "weekly") as Frequency,
+    // for sample box, we still store a valid frequency internally (monthly)
+    frequency: (plan.default_frequency || "monthly") as Frequency,
     delivery_day:
       (plan.delivery_days_available?.[0] || "wednesday") as DeliveryDay,
     preferred_payment_method: "cash",
@@ -107,16 +108,14 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
 
-  // If plan changes (different plan_id), sync defaultFrequency + first delivery day
   useEffect(() => {
     setForm((prev) => ({
       ...prev,
-      frequency: plan.default_frequency || "weekly",
+      frequency: plan.default_frequency || "monthly",
       delivery_day:
-        (plan.delivery_days_available?.[0] || prev.delivery_day) ??
-        "wednesday",
+        (plan.delivery_days_available?.[0] || prev.delivery_day) ?? "wednesday",
     }));
-  }, [plan.id]);
+  }, [plan.id, plan.default_frequency, plan.delivery_days_available]);
 
   const updateField = (field: string, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -145,23 +144,13 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
       newErrors.phone = "Phone (WhatsApp) is required";
     if (!form.address.trim())
       newErrors.address = "Address / delivery area is required";
-    if (!form.frequency) newErrors.frequency = "Frequency is required";
     if (!form.delivery_day)
       newErrors.delivery_day = "Delivery day is required";
     if (!form.preferred_payment_method)
       newErrors.preferred_payment_method =
         "Preferred payment method is required";
 
-    // If you want snack selection to be mandatory, uncomment this:
-    // const totalSelected =
-    //   snackPreferences.sweets.length +
-    //   snackPreferences.spicy.length +
-    //   snackPreferences.salt.length;
-    // if (totalSelected === 0) {
-    //   newErrors.snack_preferences =
-    //     "Please choose at least one item for your snack box.";
-    // }
-
+    // frequency is always set internally; we don't need a separate error for sample box
     return newErrors;
   };
 
@@ -176,7 +165,6 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
 
     setSubmitting(true);
 
-    // Dates for API
     const today = new Date();
     const start_date = formatDate(today);
     const next_delivery_date = getNextDeliveryDate(
@@ -184,31 +172,27 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
       form.delivery_day as DeliveryDay
     );
 
-    // Convert frequency to backend-friendly string (weekly / biweekly)
     const apiFrequency =
-      form.frequency === "bi-weekly" ? "biweekly" : form.frequency;
+      form.frequency === "bi-weekly" ? "biweekly" : form.frequency; // "monthly" or for sample box treated as monthly
 
-    // Full payload including everything you asked for
     const payload = {
-      // New / explicit fields
-      subscription_plan_id: Number(plan.id), // if your backend uses UUID, map here
+      subscription_plan_id: Number(plan.id),
       plan_name: plan.name,
       customer_name: form.customer_name.trim(),
       customer_phone: form.phone.trim(),
       customer_email: form.email.trim() || null,
       address: form.address.trim(),
-      frequency: apiFrequency, // "weekly" | "biweekly"
+      frequency: apiFrequency,
       delivery_day_of_week: form.delivery_day,
       preferred_payment_method: form.preferred_payment_method,
       start_date,
       next_delivery_date,
       notes: form.notes.trim() || null,
       source: "website",
-      customer_external_id: null, // or set to logged-in user id if available
+      customer_external_id: null,
       status: "pending",
       snack_preferences: snackPreferences,
 
-      // Backward-compatible fields you were already using
       plan_id: plan.id,
       phone: form.phone.trim(),
       email: form.email.trim() || null,
@@ -219,20 +203,20 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
       console.log("Submitting subscription payload", payload);
 
       const body = {
-        subscription_plan_id: payload.subscription_plan_id, // "2" etc, or null if you prefer
+        subscription_plan_id: payload.subscription_plan_id,
         plan_name: payload.plan_name,
         customer_name: payload.customer_name,
         customer_phone: payload.customer_phone,
         customer_email: payload.customer_email,
         address: payload.address,
-        frequency: payload.frequency, // "weekly" | "biweekly"
+        frequency: payload.frequency,
         delivery_day_of_week: payload.delivery_day_of_week,
         preferred_payment_method: payload.preferred_payment_method,
         start_date: payload.start_date,
         next_delivery_date: payload.next_delivery_date,
         notes: payload.notes,
-        status: payload.status, // "pending"
-        source: payload.source, // "website"
+        status: payload.status,
+        source: payload.source,
         customer_external_id: payload.customer_external_id,
       };
 
@@ -269,7 +253,8 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
         Subscription Details
       </h2>
       <p className="text-xs text-slate-600 mb-4">
-        Fill in your details and we’ll confirm your subscription via WhatsApp.
+        Fill in your details and we’ll confirm your{" "}
+        {isSampleBox ? "sample box order via WhatsApp." : "subscription via WhatsApp."}
       </p>
 
       {submitError && (
@@ -279,6 +264,8 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
       )}
 
       <form onSubmit={handleSubmit} className="space-y-3 text-xs">
+        {/* name, phone, email, address = unchanged */}
+
         <div>
           <label className="block font-medium text-slate-800 mb-1">
             Full Name <span className="text-rose-500">*</span>
@@ -299,8 +286,7 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
         <div>
           <div className="flex items-center justify-between mb-1">
             <label className="block font-medium text-slate-800">
-              Phone (WhatsApp){" "}
-              <span className="text-rose-500">*</span>
+              Phone (WhatsApp) <span className="text-rose-500">*</span>
             </label>
             <p className="text-[10px] text-slate-500">
               We will confirm via WhatsApp.
@@ -313,9 +299,7 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
             onChange={(e) => updateField("phone", e.target.value)}
           />
           {errors.phone && (
-            <p className="mt-1 text-[11px] text-rose-600">
-              {errors.phone}
-            </p>
+            <p className="mt-1 text-[11px] text-rose-600">{errors.phone}</p>
           )}
         </div>
 
@@ -349,30 +333,32 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
         </div>
 
         <div className="grid md:grid-cols-2 gap-3">
+          {/* Frequency field behaves differently for Sample Box */}
           <div>
             <label className="block font-medium text-slate-800 mb-1">
-              Select Frequency{" "}
-              <span className="text-rose-500">*</span>
+              Select Frequency <span className="text-rose-500">*</span>
             </label>
-            <select
-              className="w-full rounded-md border px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-amber-400"
-              value={form.frequency}
-              onChange={(e) => updateField("frequency", e.target.value)}
-            >
-              <option value="weekly">Weekly</option>
-              <option value="bi-weekly">Bi-Weekly</option>
-            </select>
-            {errors.frequency && (
-              <p className="mt-1 text-[11px] text-rose-600">
-                {errors.frequency}
-              </p>
+            {isSampleBox ? (
+              <div className="w-full rounded-md border bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-900">
+                Sample box (one-time)
+              </div>
+            ) : (
+              <select
+                className="w-full rounded-md border px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-amber-400"
+                value={form.frequency}
+                onChange={(e) => updateField("frequency", e.target.value)}
+              >
+                <option value="monthly">Monthly</option>
+                <option value="bi-weekly">
+                  Bi-Weekly
+                </option>
+              </select>
             )}
           </div>
 
           <div>
             <label className="block font-medium text-slate-800 mb-1">
-              Select Delivery Day{" "}
-              <span className="text-rose-500">*</span>
+              Select Delivery Day <span className="text-rose-500">*</span>
             </label>
             <select
               className="w-full rounded-md border px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-amber-400"
@@ -401,6 +387,7 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
           </div>
         </div>
 
+        {/* rest of the form stays same (payment, customization, notes, submit) */}
         <div>
           <label className="block font-medium text-slate-800 mb-1">
             Preferred Payment Method{" "}
@@ -550,6 +537,7 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
             subscription via WhatsApp.
           </p>
         </div>
+        {/* ... existing code from your version for payment + snacks + notes + submit ... */}
       </form>
     </section>
   );

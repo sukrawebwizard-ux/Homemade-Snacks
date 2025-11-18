@@ -11,13 +11,13 @@ const ContactUs: React.FC = () => {
         a message and we’ll get back to you via WhatsApp or email.
       </p>
       <div className="space-y-2 text-sm text-slate-700">
-        <p>
+        {/* <p>
           <span className="font-semibold">WhatsApp: </span>
           +356 0000 0000
-        </p>
+        </p> */}
         <p>
           <span className="font-semibold">Email: </span>
-          hello@example.com
+          hello@homemadesnacks.com
         </p>
         <p>
           <span className="font-semibold">Location: </span>

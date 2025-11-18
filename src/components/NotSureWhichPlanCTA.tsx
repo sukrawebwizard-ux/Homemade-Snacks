@@ -1,26 +1,49 @@
 import React from "react";
 
 const NotSureWhichPlanCTA: React.FC = () => {
+  const handleSampleClick = () => {
+    // Vite exposes the correct base path here, e.g. "/-Homemade-Snacks/" on GitHub Pages
+    const base = import.meta.env.BASE_URL || "/";
+
+    // Ensure there's exactly one trailing slash before "subscribe"
+    const normalizedBase = base.endsWith("/") ? base : `${base}/`;
+
+    window.location.href = `${normalizedBase}subscribe?plan_id=3`;
+  };
+
   return (
-    <section className="rounded-2xl border bg-emerald-50 p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <section className="rounded-2xl border border-amber-100 bg-amber-50/80 p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
       <div>
-        <p className="text-sm font-semibold text-emerald-900 mb-1">
-          Not sure which plan suits you?
+        <p className="text-sm font-semibold text-amber-900 mb-1">
+          Unsure which subscription works best?
         </p>
-        <p className="text-xs text-emerald-800">
-          Message us on WhatsApp and we’ll recommend the perfect box for your
-          family.
+        <p className="text-xs text-amber-800 mb-2">
+          Start with our one-time{" "}
+          <span className="font-semibold">Sample Snack Box</span>. Taste a mix
+          of our sweet, spicy and salted Kerala snacks before you commit to a
+          subscription.
         </p>
+        <ul className="text-[11px] text-amber-900/90 list-disc pl-4 space-y-0.5">
+          <li>No subscription, one-time order only</li>
+          <li>Curated mix of our most-loved snacks</li>
+          <li>Perfect to decide which plan fits your family</li>
+        </ul>
       </div>
-      <button
-        className="inline-flex items-center gap-2 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2 text-xs font-semibold shadow-sm"
-        onClick={() => {
-          const phone = "+35600000000"; // replace with your real WhatsApp number
-          window.open(`https://wa.me/${phone}`, "_blank");
-        }}
-      >
-        <span className="text-base">💬</span> Chat on WhatsApp
-      </button>
+
+      <div className="flex md:flex-col items-start md:items-end gap-2 md:gap-3">
+        <p className="text-[11px] text-amber-900/80 md:text-right">
+          From <span className="font-semibold">€10.00</span>{" "}
+          <br className="hidden md:block" />
+          (introductory sample box)
+        </p>
+        <button
+          className="inline-flex items-center gap-2 rounded-full bg-amber-600 hover:bg-amber-700 text-white px-5 py-2 text-xs font-semibold shadow-sm"
+          onClick={handleSampleClick}
+        >
+          <span className="text-base">✨</span>
+          Try Sample Snack Box
+        </button>
+      </div>
     </section>
   );
 };
