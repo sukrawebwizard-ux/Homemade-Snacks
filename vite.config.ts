@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react-swc";
 
 export default defineConfig({
   plugins: [react()],
-  base: '/',       // URL prefix
+  base: '/snacksinmalta.github.io/',       // URL prefix for your repo
   build: {
     outDir: 'docs',              // Must output files here
     emptyOutDir: true,
