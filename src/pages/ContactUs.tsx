@@ -11,18 +11,12 @@ const ContactUs: React.FC = () => {
         a message and we’ll get back to you via WhatsApp or email.
       </p>
       <div className="space-y-2 text-sm text-slate-700">
-        {/* <p>
-          <span className="font-semibold">WhatsApp: </span>
-          +356 0000 0000
-        </p> */}
-        <p>
-          <span className="font-semibold">Email: </span>
-          hello@homemadesnacks.com
-        </p>
-        <p>
-          <span className="font-semibold">Location: </span>
-          Birkirkara, Malta
-        </p>
+        <ul className="space-y-2 text-sm text-slate-700 list-disc pl-4">
+          <li>Ask anything about our weekly, bi-weekly or monthly snack plans</li>
+          <li>Check if we deliver to your area</li>
+          <li>Request details about bulk orders or special occasions</li>
+          <li>Share feedback or suggestions — we love hearing from you!</li>
+        </ul>
       </div>
     </aside>
   );

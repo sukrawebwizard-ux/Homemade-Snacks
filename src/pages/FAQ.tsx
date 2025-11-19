@@ -9,6 +9,17 @@ const FAQ: React.FC = () => {
       <div className="space-y-3 text-sm text-slate-700">
         <details className="rounded-md border border-slate-100 bg-slate-50 px-3 py-2">
           <summary className="cursor-pointer font-medium">
+            If I subscribe today, when will I receive my first delivery?
+          </summary>
+          <p className="mt-1 text-xs text-slate-600">
+            Once you subscribe, we’ll add you to our upcoming delivery batch.
+            We will be in touch via WhatsApp to confirm your order and delivery
+            date. If you choose the bi-weekly plan you will receive your first box in
+            1-2 weeks, and for the monthly plan within 3-4 weeks.
+          </p>
+        </details>
+        <details className="rounded-md border border-slate-100 bg-slate-50 px-3 py-2">
+          <summary className="cursor-pointer font-medium">
             Which areas do you deliver to?
           </summary>
           <p className="mt-1 text-xs text-slate-600">
