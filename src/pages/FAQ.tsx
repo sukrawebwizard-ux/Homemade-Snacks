@@ -47,6 +47,14 @@ const FAQ: React.FC = () => {
             occasion.
           </p>
         </details>
+        <details className="rounded-md border border-slate-100 bg-slate-50 px-3 py-2">
+          <summary className="cursor-pointer font-medium">
+            Can I cancel my subscription anytime?
+          </summary>
+          <p className="mt-1 text-xs text-slate-600">
+            Yes! You can cancel your subscription anytime with no charges or fees. Simply reach out via WhatsApp on the same number we contacted you, and we'll remove you from our subscription list. If you'd like to rejoin in the future, you're always welcome back.
+          </p>
+        </details>
       </div>
     </section>
   );
