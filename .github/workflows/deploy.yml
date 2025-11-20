@@ -6,14 +6,14 @@ on:
   pull_request:
     branches: [main]
 
+# Give the default GITHUB_TOKEN write access so the action can push to gh-pages
+permissions:
+  contents: write
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     environment: live
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
 
     steps:
       - name: Checkout code
@@ -38,5 +38,6 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
           publish_dir: ./docs
           cname: snacksinmalta.com
