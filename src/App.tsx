@@ -134,7 +134,7 @@ const App: React.FC = () => {
     page = (
       <main className="max-w-5xl mx-auto px-4 pt-8 pb-16">
         <ChooseYourSubscriptionPlan plans={plans} onNavigate={navigate} />
-        <NotSureWhichPlanCTA />
+        <NotSureWhichPlanCTA onNavigate={navigate} />
       </main>
     );
   } else if (cleanPath === "/contact") {

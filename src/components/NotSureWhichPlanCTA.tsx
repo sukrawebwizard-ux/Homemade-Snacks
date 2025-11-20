@@ -1,14 +1,12 @@
 import React from "react";
 
-const NotSureWhichPlanCTA: React.FC = () => {
+interface Props {
+  onNavigate: (to: string) => void;
+}
+
+const NotSureWhichPlanCTA: React.FC<Props> = ({ onNavigate }) => {
   const handleSampleClick = () => {
-    // Vite exposes the correct base path here, e.g. "/-Homemade-Snacks/" on GitHub Pages
-    const base = import.meta.env.BASE_URL || "/";
-
-    // Ensure there's exactly one trailing slash before "subscribe"
-    const normalizedBase = base.endsWith("/") ? base : `${base}/`;
-
-    window.location.href = `${normalizedBase}subscribe?plan_id=3`;
+    onNavigate("/subscribe?plan_id=3");
   };
 
   return (
