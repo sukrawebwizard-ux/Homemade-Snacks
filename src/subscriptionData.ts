@@ -91,7 +91,7 @@ export const SNACKS: Snack[] = [
     unit: "10 pcs",
     price: 3.0,
     category: "sweets",
-    image: "/snacks/unniyappam.png"
+    image: new URL("/snacks/unniyappam.png", import.meta.url).href
   },
   {
     id: 2,
@@ -100,7 +100,7 @@ export const SNACKS: Snack[] = [
     unit: "150g",
     price: 3.0,
     category: "sweets",
-    image: "/snacks/banana-chips.jpg"
+    image: new URL("/snacks/banana-chips.jpg", import.meta.url).href
   },
   {
     id: 3,
@@ -109,7 +109,7 @@ export const SNACKS: Snack[] = [
     unit: "10 pcs",
     price: 3.0,
     category: "sweets",
-    image: "/snacks/achappam.jpg"
+    image: new URL("/snacks/achappam.jpg", import.meta.url).href
   },
   {
     id: 4,
@@ -118,7 +118,7 @@ export const SNACKS: Snack[] = [
     unit: "3 pcs",
     price: 5.0,
     category: "spicy",
-    image: "/snacks/cutlets.jpg"
+    image: new URL("/snacks/cutlets.jpg", import.meta.url).href
   },
   {
     id: 5,
@@ -127,7 +127,7 @@ export const SNACKS: Snack[] = [
     unit: "3 pcs",
     price: 5.0,
     category: "spicy",
-    image: "/snacks/cutlets.jpg"
+    image: new URL("/snacks/cutlets.jpg", import.meta.url).href
   },
   {
     id: 6,
@@ -136,7 +136,7 @@ export const SNACKS: Snack[] = [
     unit: "3 pcs",
     price: 5.0,
     category: "spicy",
-    image: "/snacks/cutlets.jpg"
+    image: new URL("/snacks/cutlets.jpg", import.meta.url).href
   },
   {
     id: 7,
@@ -145,7 +145,7 @@ export const SNACKS: Snack[] = [
     unit: "170g",
     price: 3.0,
     category: "spicy",
-    image: "/snacks/mixture.png"
+    image: new URL("/snacks/mixture.png", import.meta.url).href
   },
   {
     id: 8,
@@ -154,7 +154,7 @@ export const SNACKS: Snack[] = [
     unit: "150g",
     price: 3.0,
     category: "spicy",
-    image: "/snacks/pakkavada.png"
+    image: new URL("/snacks/pakkavada.png", import.meta.url).href
   },
   {
     id: 9,
@@ -163,7 +163,7 @@ export const SNACKS: Snack[] = [
     unit: "150g",
     price: 3.0,
     category: "salt",
-    image: "/snacks/banana-chips.jpg"
+    image: new URL("/snacks/banana-chips.jpg", import.meta.url).href
   },
   {
     id: 10,
@@ -172,7 +172,7 @@ export const SNACKS: Snack[] = [
     unit: "170g",
     price: 3.0,
     category: "salt",
-    image: "/snacks/bombe-mixture.jpg"
+    image: new URL("/snacks/bombe-mixture.jpg", import.meta.url).href
   }
 ];
 
