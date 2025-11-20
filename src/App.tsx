@@ -12,22 +12,72 @@ import NotSureWhichPlanCTA from "./components/NotSureWhichPlanCTA";
 import SubscriptionDetails from "./components/SubscriptionDetails";
 import { MOCK_PLANS, type Plan } from "./subscriptionData";
 
+const getRelativePath = (): string => {
+  const base = import.meta.env.BASE_URL || "/"; // "/" locally, "/Homemade-Snacks/" on GitHub
+  const basePath = base.endsWith("/") ? base.slice(0, -1) : base; // "/Homemade-Snacks"
+  const { pathname, search } = window.location; // e.g. "/Homemade-Snacks/subscribe"
+
+  let relative = pathname;
+
+  // Strip "/Homemade-Snacks" part if present
+  if (basePath && relative.startsWith(basePath)) {
+    relative = relative.slice(basePath.length);
+  }
+
+  if (relative === "") relative = "/";
+  if (!relative.startsWith("/")) relative = "/" + relative;
+
+  return relative + search; // e.g. "/subscribe?plan_id=3"
+};
+
+
+// const useRoute = () => {
+//   const [path, setPath] = useState<string>(
+//     () => window.location.pathname + window.location.search
+//   );
+
+//   useEffect(() => {
+//     const handler = () => {
+//       setPath(window.location.pathname + window.location.search);
+//     };
+//     window.addEventListener("popstate", handler);
+//     return () => window.removeEventListener("popstate", handler);
+//   }, []);
+
+//   const navigate = (to: string) => {
+//     if (to === path) return;
+//     window.history.pushState({}, "", to);
+//     setPath(to);
+//   };
+
+//   return { path, navigate };
+// };
+
 const useRoute = () => {
-  const [path, setPath] = useState<string>(
-    () => window.location.pathname + window.location.search
-  );
+  const [path, setPath] = useState<string>(() => getRelativePath());
 
   useEffect(() => {
     const handler = () => {
-      setPath(window.location.pathname + window.location.search);
+      setPath(getRelativePath());
     };
     window.addEventListener("popstate", handler);
     return () => window.removeEventListener("popstate", handler);
   }, []);
 
   const navigate = (to: string) => {
+    // Always work with a leading "/"
+    if (!to.startsWith("/")) {
+      to = "/" + to;
+    }
+
     if (to === path) return;
-    window.history.pushState({}, "", to);
+
+    const base = import.meta.env.BASE_URL || "/";
+    const basePath = base.endsWith("/") ? base.slice(0, -1) : base; // "" or "/Homemade-Snacks"
+
+    const fullPath = `${basePath}${to}`; // e.g. "/Homemade-Snacks" + "/plans"
+
+    window.history.pushState({}, "", fullPath);
     setPath(to);
   };
 

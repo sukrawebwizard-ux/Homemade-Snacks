@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { supabase } from "../lib/supabaseClient";
 
 // Local types — structural, so they will work with your existing Plan shape
-export type Frequency = "bi-weekly" | "monthly";
+export type Frequency = "bi-weekly" | "monthly" | "sample";
 export type DeliveryDay =
   | "monday"
   | "tuesday"
