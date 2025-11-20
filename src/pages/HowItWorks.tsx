@@ -20,7 +20,7 @@ const HowItWorks: React.FC<HowItWorksProps> = ({ onNavigate }) => {
           </div>
           <h3 className="font-semibold text-slate-900 text-sm">Choose a plan</h3>
           <p className="text-xs text-slate-600">
-            Pick a weekly or bi-weekly snack box that matches your cravings.
+            Pick a monthly or bi-weekly snack box that matches your cravings.
           </p>
         </div>
         <div className="rounded-2xl border bg-white p-5 shadow-sm flex flex-col gap-2">

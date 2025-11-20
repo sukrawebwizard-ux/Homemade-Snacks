@@ -129,12 +129,12 @@ const Footer: React.FC = () => {
   return (
     <>
       <footer className="mt-16 border-t bg-slate-50">
-        <div className="max-w-5xl mx-auto px-4 py-6 text-sm text-slate-600 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-          <div>
+        <div className="max-w-5xl mx-auto px-4 py-8 text-sm text-slate-600 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div className="md:text-left text-center">
             <p className="font-medium">Homemade Snacks – Subscription Service</p>
             <p>• Fresh homemade small-batch snacks</p>
           </div>
-          <div className="flex gap-4 items-center">
+          <div className="flex gap-4 items-center justify-center md:justify-end">
             {/* <button
               className="inline-flex items-center gap-2 text-emerald-600 hover:text-emerald-700"
               onClick={() => {

@@ -40,8 +40,8 @@ const ChooseYourSubscriptionPlan: React.FC<Props> = ({ plans, onNavigate }) => {
               >
                 {isPopular && (
                   <div className="absolute inset-x-0 -top-3 flex justify-center">
-                    <span className="inline-flex items-center rounded-full bg-amber-500 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-white shadow-md">
-                      ⭐ Most popular
+                    <span className="inline-flex items-center rounded-full bg-gradient-to-r from-amber-400 to-amber-600 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-white shadow-md">
+                       Most popular
                     </span>
                   </div>
                 )}
