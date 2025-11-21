@@ -38,9 +38,9 @@ const SNACK_CUSTOMIZATION = {
     "Achappam - 10 pcs / €3",
   ],
   spicy: [
-    "Cutlets (Chicken) - 5 pcs / €3",
-    "Cutlets (Beef) - 5 pcs / €3",
-    "Cutlets (Veg) - 5 pcs / €3",
+    "Cutlets (Chicken) - 3 pcs / €5",
+    "Cutlets (Beef) - 3 pcs / €5",
+    "Cutlets (Veg) - 3 pcs / €5",
     "Mixture - 170g / €3",
     "Pakkavada - 150g / €3",
   ],
