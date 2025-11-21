@@ -39,12 +39,13 @@ const FAQ: React.FC = () => {
         </details>
         <details className="rounded-md border border-slate-100 bg-slate-50 px-3 py-2">
           <summary className="cursor-pointer font-medium">
-            Do you offer one-time orders, or only subscriptions?
+            Do you offer Sample Box orders, or only subscriptions?
           </summary>
           <p className="mt-1 text-xs text-slate-600">
-            For now we focus on weekly and bi-weekly subscriptions, but you
-            can contact us if you need a one-time batch for a special
-            occasion.
+            Yes, we do offer one-time orders. You can try our Sample Box, where you
+            can choose your own customised snacks. Our main focus is on weekly and
+            bi-weekly subscriptions, but if you need bulk quantities for events or
+            special occasions, feel free to contact us — we’ll be happy to help.
           </p>
         </details>
         <details className="rounded-md border border-slate-100 bg-slate-50 px-3 py-2">

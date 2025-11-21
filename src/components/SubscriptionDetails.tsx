@@ -218,6 +218,7 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
         status: payload.status,
         source: payload.source,
         customer_external_id: payload.customer_external_id,
+        snack_preferences: snackPreferences,
       };
 
       const { data, error } = await supabase
