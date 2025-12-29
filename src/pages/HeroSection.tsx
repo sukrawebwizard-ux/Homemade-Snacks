@@ -94,10 +94,10 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
           </ul>
           <div className="flex flex-wrap items-center gap-3 pt-2">
             <button
-              onClick={() => onNavigate("/plans")}
+              onClick={() => onNavigate("/subscribe?plan_id=3")}
               className="inline-flex items-center justify-center rounded-full bg-amber-500 hover:bg-amber-600 text-white px-6 py-2.5 text-sm font-semibold shadow-sm transition-colors"
             >
-              Subscribe Now
+              Try Sample Box
             </button>
             <button
               onClick={() => onNavigate("/plans")}
@@ -145,10 +145,10 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
 
         <div className="flex flex-wrap items-center gap-3 pt-2">
           <button
-            onClick={() => onNavigate("/plans")}
+            onClick={() => onNavigate("/subscribe?plan_id=3")}
             className="inline-flex items-center justify-center rounded-full bg-amber-500 hover:bg-amber-600 text-white px-6 py-2.5 text-sm font-semibold shadow-sm transition-colors"
           >
-            Subscribe Now
+            Try Sample Box
           </button>
           <button
             onClick={() => onNavigate("/plans")}
@@ -159,8 +159,11 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
         </div>
 
         <div className="flex items-center gap-2 text-[10px] md:text-xs text-slate-500 pt-1">
-          <span className="flex items-center justify-center w-5 h-5 rounded-full bg-emerald-100 text-emerald-600">
-            🛡️
+          <span className="flex items-center justify-center w-5 h-5 rounded-full bg-[#f59e0b3d]">
+            <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" className="w-3 h-3">
+              <path d="M32 4l22 8v16c0 14-9.6 26.2-22 32C19.6 54.2 10 42 10 28V12l22-8z"
+                fill="#FF8C00" />
+            </svg>
           </span>
           <span>
             <strong>No card required.</strong> Pay via Cash or Revolut on delivery.

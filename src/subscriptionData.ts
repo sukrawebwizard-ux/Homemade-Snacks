@@ -45,7 +45,7 @@ export const MOCK_PLANS: Plan[] = [
     description: "A fresh selection of homemade snacks every month.",
     price: 15.0,
     default_frequency: "monthly",
-    delivery_days_available: ["wednesday", "saturday"],
+    delivery_days_available: ["sunday", "wednesday", "saturday"],
     items: [
       { product_id: 1, product_name: "Unniyappam", quantity: 10 },
       { product_id: 2, product_name: "Banana Chips (Sweet)", quantity: 1 },
@@ -58,7 +58,7 @@ export const MOCK_PLANS: Plan[] = [
     description: "Perfect for families, delivered every two weeks.",
     price: 25.0,
     default_frequency: "bi-weekly",
-    delivery_days_available: ["saturday"],
+    delivery_days_available: ["sunday", "saturday"],
     items: [
       { product_id: 1, product_name: "Unniyappam", quantity: 15 },
       { product_id: 7, product_name: "Mixture", quantity: 1 },
@@ -72,7 +72,7 @@ export const MOCK_PLANS: Plan[] = [
       "One-time sample box with a curated mix of sweet, spicy and salted snacks. No recurring subscription.",
     price: 10.0,
     default_frequency: "sample", // used just to satisfy the type; user sees it's one-time in the description
-    delivery_days_available: ["wednesday", "saturday"],
+    delivery_days_available: ["sunday", "wednesday", "saturday"],
     items: [
       { product_id: 1, product_name: "Unniyappam", quantity: 6 },
       { product_id: 2, product_name: "Banana Chips (Sweet)", quantity: 1 },
