@@ -14,32 +14,15 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
     setOpen(false); // close mobile menu after navigation
   };
 
-  const toggleLanguage = () => {
-    switch (language) {
-      case 'en': setLanguage('ml'); break;
-      case 'ml': setLanguage('hi'); break;
-      case 'hi': setLanguage('ta'); break;
-      case 'ta': setLanguage('te'); break;
-      case 'te': setLanguage('kn'); break;
-      case 'kn': setLanguage('mt'); break;
-      case 'mt': setLanguage('en'); break;
-      default: setLanguage('en');
-    }
-    setOpen(false);
-  };
-
-  const getNextLanguageLabel = () => {
-    switch (language) {
-      case 'en': return 'മലയാളം';
-      case 'ml': return 'हिंदी';
-      case 'hi': return 'தமிழ்';
-      case 'ta': return 'తెలుగు';
-      case 'te': return 'ಕನ್ನಡ';
-      case 'kn': return 'Malti';
-      case 'mt': return 'English';
-      default: return 'English';
-    }
-  };
+  const languages = [
+    { code: 'en', label: 'English' },
+    { code: 'ml', label: 'മലയാളം' },
+    { code: 'hi', label: 'हिंदी' },
+    { code: 'ta', label: 'தமிழ்' },
+    { code: 'te', label: 'తెలుగు' },
+    { code: 'kn', label: 'ಕನ್ನಡ' },
+    { code: 'mt', label: 'Malti' },
+  ] as const;
 
   return (
     <>
@@ -89,12 +72,24 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
               Contact
             </button>
 
-            <button
-              className="hover:text-amber-600 transition-colors font-semibold text-amber-800 bg-amber-50 px-3 py-1 rounded-full text-xs shadow-sm border border-amber-100"
-              onClick={toggleLanguage}
-            >
-              {getNextLanguageLabel()}
-            </button>
+            <div className="relative">
+              <select
+                value={language}
+                onChange={(e) => setLanguage(e.target.value as any)}
+                className="appearance-none cursor-pointer hover:text-amber-600 transition-colors font-semibold text-amber-800 bg-amber-50 pl-3 pr-8 py-1 rounded-full text-xs shadow-sm border border-amber-100 focus:outline-none focus:ring-2 focus:ring-amber-500/50"
+              >
+                {languages.map((lang) => (
+                  <option key={lang.code} value={lang.code}>
+                    {lang.label}
+                  </option>
+                ))}
+              </select>
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-amber-800">
+                <svg className="h-3 w-3 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                  <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                </svg>
+              </div>
+            </div>
           </nav>
 
           {/* Mobile hamburger */}
@@ -125,13 +120,27 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
         {open && (
           <nav className="border-t border-amber-100 bg-white md:hidden">
             <div className="mx-auto flex max-w-5xl flex-col px-4 py-2 text-sm font-medium text-slate-800">
-              <button
-                className="w-full rounded-md px-2 py-2 text-left hover:bg-amber-50 flex items-center justify-between"
-                onClick={toggleLanguage}
-              >
+              <div className="w-full rounded-md px-2 py-2 flex items-center justify-between hover:bg-amber-50">
                 <span>Language</span>
-                <span className="text-amber-600 font-bold">{getNextLanguageLabel()}</span>
-              </button>
+                <div className="relative">
+                  <select
+                    value={language}
+                    onChange={(e) => setLanguage(e.target.value as any)}
+                    className="appearance-none cursor-pointer font-bold text-amber-600 bg-transparent pr-6 text-right focus:outline-none"
+                  >
+                    {languages.map((lang) => (
+                      <option key={lang.code} value={lang.code}>
+                        {lang.label}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center text-amber-600">
+                    <svg className="h-3 w-3 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                      <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
               <button
                 className="w-full rounded-md px-2 py-2 text-left hover:bg-amber-50"
                 onClick={() => handleNav("/")}

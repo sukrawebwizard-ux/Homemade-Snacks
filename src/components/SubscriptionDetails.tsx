@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from "../lib/supabaseClient";
+import { useLanguage } from "../lib/LanguageContext";
 
 // Local types — structural, so they will work with your existing Plan shape
 export type Frequency = "bi-weekly" | "monthly" | "sample";
@@ -107,6 +108,28 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
   const [errors, setErrors] = useState<Record<string, string | undefined>>({});
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
+  const { t } = useLanguage();
+
+  const calculateTotal = () => {
+    let total = 0;
+    const allSelected = [
+      ...snackPreferences.sweets,
+      ...snackPreferences.spicy,
+      ...snackPreferences.salt,
+    ];
+
+    allSelected.forEach((item) => {
+      // Extract price from string like "Unniyappam - 10 pcs / €3"
+      const match = item.match(/€(\d+(\.\d+)?)/);
+      if (match && match[1]) {
+        total += parseFloat(match[1]);
+      }
+    });
+
+    return total;
+  };
+
+  const totalAmount = calculateTotal();
 
   useEffect(() => {
     setForm((prev) => ({
@@ -526,13 +549,20 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
         </div>
 
         <div className="pt-2">
-          <button
-            type="submit"
-            disabled={submitting}
-            className="inline-flex items-center justify-center rounded-full bg-amber-500 hover:bg-amber-600 disabled:opacity-60 disabled:cursor-not-allowed text-white px-6 py-2 text-sm font-semibold shadow-sm"
-          >
-            {submitting ? "Submitting..." : "Confirm Subscription"}
-          </button>
+          <div className="flex items-center gap-4 mb-3">
+            <button
+              type="submit"
+              disabled={submitting}
+              className="inline-flex items-center justify-center rounded-full bg-amber-500 hover:bg-amber-600 disabled:opacity-60 disabled:cursor-not-allowed text-white px-6 py-2 text-sm font-semibold shadow-sm"
+            >
+              {submitting ? "Submitting..." : "Confirm Subscription"}
+            </button>
+
+            <div className="flex flex-col">
+              <span className="text-[10px] uppercase tracking-wider font-bold text-slate-500">{t('label_total')}</span>
+              <span className="text-xl font-bold text-amber-600">€{totalAmount.toFixed(2)}</span>
+            </div>
+          </div>
 
           <div className="mt-4 flex items-start gap-2 bg-slate-50 p-3 rounded-xl border border-slate-100">
             <div className="text-lg">✨</div>
@@ -544,10 +574,11 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
             </div>
           </div>
         </div>
-        {/* ... existing code from your version for payment + snacks + notes + submit ... */}
       </form>
     </section>
   );
 };
+
+
 
 export default SubscriptionDetails;
