@@ -157,6 +157,15 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
             View Plans
           </button>
         </div>
+
+        <div className="flex items-center gap-2 text-[10px] md:text-xs text-slate-500 pt-1">
+          <span className="flex items-center justify-center w-5 h-5 rounded-full bg-emerald-100 text-emerald-600">
+            🛡️
+          </span>
+          <span>
+            <strong>No card required.</strong> Pay via Cash or Revolut on delivery.
+          </span>
+        </div>
       </div>
 
       {/* RIGHT SIDE: Testimonial + Photo */}
@@ -195,9 +204,8 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
                 <button
                   key={idx}
                   onClick={() => setActiveIndex(idx)}
-                  className={`h-2 rounded-full transition-all ${
-                    idx === activeIndex ? "w-4 bg-amber-600" : "w-2 bg-amber-300"
-                  }`}
+                  className={`h-2 rounded-full transition-all ${idx === activeIndex ? "w-4 bg-amber-600" : "w-2 bg-amber-300"
+                    }`}
                 />
               ))}
             </div>

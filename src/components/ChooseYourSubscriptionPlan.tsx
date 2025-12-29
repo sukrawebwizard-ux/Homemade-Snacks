@@ -21,10 +21,18 @@ const ChooseYourSubscriptionPlan: React.FC<Props> = ({ plans, onNavigate }) => {
         <h1 className="text-2xl md:text-3xl font-bold text-slate-900 mb-2">
           Choose Your Subscription Plan
         </h1>
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-slate-600 mb-4">
           Select bi-weekly or monthly delivery, and we’ll handle the rest.
           Bi-weekly plans are delivered every 2 weeks.
         </p>
+
+        {/* TRUST BANNER */}
+        <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-100 text-emerald-800 text-xs px-4 py-2 rounded-xl">
+          <span className="text-lg">💳</span>
+          <span>
+            <strong>No payment required now.</strong> You only pay via Cash or Revolut when your snacks arrive!
+          </span>
+        </div>
       </section>
 
       <section className="grid md:grid-cols-2 gap-6">
@@ -41,7 +49,7 @@ const ChooseYourSubscriptionPlan: React.FC<Props> = ({ plans, onNavigate }) => {
                 {isPopular && (
                   <div className="absolute inset-x-0 -top-3 flex justify-center">
                     <span className="inline-flex items-center rounded-full bg-gradient-to-r from-amber-400 to-amber-600 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-white shadow-md">
-                       Most popular
+                      Most popular
                     </span>
                   </div>
                 )}

@@ -533,10 +533,16 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
           >
             {submitting ? "Submitting..." : "Confirm Subscription"}
           </button>
-          <p className="mt-2 text-[11px] text-slate-500 max-w-md">
-            Submitting this form does not charge you. We will confirm your
-            subscription via WhatsApp.
-          </p>
+
+          <div className="mt-4 flex items-start gap-2 bg-slate-50 p-3 rounded-xl border border-slate-100">
+            <div className="text-lg">✨</div>
+            <div>
+              <p className="text-[11px] font-semibold text-slate-800">No payment required now</p>
+              <p className="text-[11px] text-slate-500 leading-tight">
+                We do not ask for credit card details. You will only pay via Cash or Revolut upon delivery.
+              </p>
+            </div>
+          </div>
         </div>
         {/* ... existing code from your version for payment + snacks + notes + submit ... */}
       </form>
