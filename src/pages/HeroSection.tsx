@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "../lib/supabaseClient";
+import { useLanguage } from "../lib/LanguageContext";
 
 interface HeroSectionProps {
   onNavigate: (to: string) => void;
@@ -18,6 +19,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [loading, setLoading] = useState(true);
+  const { t } = useLanguage();
 
   useEffect(() => {
     fetchTestimonials();
@@ -72,24 +74,24 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
       <section className="grid md:grid-cols-2 gap-10 items-center mb-16">
         <div className="space-y-5">
           <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-amber-600 bg-amber-50 rounded-full px-3 py-1">
-            <span className="text-base">🥰</span> Homemade Snack Subscription
+            <span className="text-base">🥰</span> {t('hero_tagline')}
           </p>
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900">
-            Fresh Homemade Snacks,
-            <br /> Delivered to Your Door.
+          <h1 className="text-[1.5rem] leading-[2rem] md:text-[2.5rem] md:leading-[3rem] font-bold tracking-tight text-slate-900">
+            {t('hero_title_1')}
+            <br /> {t('hero_title_2')}
           </h1>
-          <p className="text-slate-600 text-sm md:text-base leading-relaxed">
-            Bi-weekly or monthly snack boxes filled with Kerala-style homemade goodies.
+          <p className="text-slate-600 text-base leading-relaxed md:text-lg">
+            {t('hero_subtitle')}
           </p>
-          <ul className="space-y-1 text-sm text-slate-700">
+          <ul className="space-y-1 text-[0.775rem] leading-[1.25rem] text-slate-700">
             <li className="flex items-center gap-2">
-              <span className="text-emerald-500">✓</span> Small-batch homemade snacks
+              <span className="text-emerald-500">✓</span> {t('hero_feature_1')}
             </li>
             <li className="flex items-center gap-2">
-              <span className="text-emerald-500">✓</span> Bi-weekly / Monthly delivery options
+              <span className="text-emerald-500">✓</span> {t('hero_feature_2')}
             </li>
             <li className="flex items-center gap-2">
-              <span className="text-emerald-500">✓</span> WhatsApp confirmation included
+              <span className="text-emerald-500">✓</span> {t('hero_feature_3')}
             </li>
           </ul>
           <div className="flex flex-wrap items-center gap-3 pt-2">
@@ -119,27 +121,27 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
       {/* LEFT SIDE */}
       <div className="space-y-5">
         <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-amber-600 bg-amber-50 rounded-full px-3 py-1">
-          <span className="text-base">🥰</span> Homemade Snack Subscription
+          <span className="text-base">🥰</span> {t('hero_tagline')}
         </p>
 
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900">
-          Fresh Homemade Snacks,
-          <br /> Delivered to Your Door.
+        <h1 className="text-[1.075rem] leading-[1.55rem] md:text-[1.65rem] md:leading-[2rem] font-bold tracking-tight text-slate-900">
+          {t('hero_title_1')}
+          <br /> {t('hero_title_2')}
         </h1>
 
-        <p className="text-slate-600 text-sm md:text-base leading-relaxed">
-          Bi-weekly or monthly snack boxes filled with Kerala-style homemade goodies.
+        <p className="text-slate-600 text-[0.775rem] leading-[1.25rem] md:text-base">
+          {t('hero_subtitle')}
         </p>
 
-        <ul className="space-y-1 text-sm text-slate-700">
+        <ul className="space-y-1 text-[0.775rem] leading-[1.25rem] text-slate-700">
           <li className="flex items-center gap-2">
-            <span className="text-emerald-500">✓</span> Small-batch homemade snacks
+            <span className="text-emerald-500">✓</span> {t('hero_feature_1')}
           </li>
           <li className="flex items-center gap-2">
-            <span className="text-emerald-500">✓</span> Bi-weekly / Monthly delivery options
+            <span className="text-emerald-500">✓</span> {t('hero_feature_2')}
           </li>
           <li className="flex items-center gap-2">
-            <span className="text-emerald-500">✓</span> WhatsApp confirmation included
+            <span className="text-emerald-500">✓</span> {t('hero_feature_3')}
           </li>
         </ul>
 
@@ -166,7 +168,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
             </svg>
           </span>
           <span>
-            <strong>No card required.</strong> Pay via Cash or Revolut on delivery.
+            {t('hero_no_card')}
           </span>
         </div>
       </div>

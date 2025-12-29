@@ -11,6 +11,7 @@ import ChooseYourSubscriptionPlan from "./components/ChooseYourSubscriptionPlan"
 import NotSureWhichPlanCTA from "./components/NotSureWhichPlanCTA";
 import SubscriptionDetails from "./components/SubscriptionDetails";
 import { MOCK_PLANS, type Plan } from "./subscriptionData";
+import { LanguageProvider } from "./lib/LanguageContext";
 
 const getRelativePath = (): string => {
   const base = import.meta.env.BASE_URL || "/"; // "/" locally, "/Homemade-Snacks/" on GitHub
@@ -30,28 +31,6 @@ const getRelativePath = (): string => {
   return relative + search; // e.g. "/subscribe?plan_id=3"
 };
 
-
-// const useRoute = () => {
-//   const [path, setPath] = useState<string>(
-//     () => window.location.pathname + window.location.search
-//   );
-
-//   useEffect(() => {
-//     const handler = () => {
-//       setPath(window.location.pathname + window.location.search);
-//     };
-//     window.addEventListener("popstate", handler);
-//     return () => window.removeEventListener("popstate", handler);
-//   }, []);
-
-//   const navigate = (to: string) => {
-//     if (to === path) return;
-//     window.history.pushState({}, "", to);
-//     setPath(to);
-//   };
-
-//   return { path, navigate };
-// };
 
 const useRoute = () => {
   const [path, setPath] = useState<string>(() => getRelativePath());
@@ -219,21 +198,23 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-amber-50/60 via-white to-slate-50 text-slate-900">
-      <Header onNavigate={navigate} />
-      {loadingPlans && (
-        <div className="max-w-5xl mx-auto px-4 pt-3 text-[11px] text-slate-500">
-          Loading latest subscription plans...
-        </div>
-      )}
-      {plansError && (
-        <div className="max-w-5xl mx-auto px-4 pt-3 text-[11px] text-amber-700">
-          {plansError}
-        </div>
-      )}
-      <div className="flex-1">{page}</div>
-      <Footer />
-    </div>
+    <LanguageProvider>
+      <div className="min-h-screen flex flex-col bg-gradient-to-b from-amber-50/60 via-white to-slate-50 text-slate-900">
+        <Header onNavigate={navigate} />
+        {loadingPlans && (
+          <div className="max-w-5xl mx-auto px-4 pt-3 text-[11px] text-slate-500">
+            Loading latest subscription plans...
+          </div>
+        )}
+        {plansError && (
+          <div className="max-w-5xl mx-auto px-4 pt-3 text-[11px] text-amber-700">
+            {plansError}
+          </div>
+        )}
+        <div className="flex-1">{page}</div>
+        <Footer />
+      </div>
+    </LanguageProvider>
   );
 };
 

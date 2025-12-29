@@ -1,16 +1,19 @@
 import React from "react";
+import { useLanguage } from "../lib/LanguageContext";
 
 interface HowItWorksProps {
   onNavigate: (to: string) => void;
 }
 
 const HowItWorks: React.FC<HowItWorksProps> = ({ onNavigate }) => {
+  const { t } = useLanguage();
+
   return (
     <section className="mb-16">
       <div className="text-center mb-8">
-        <h2 className="text-2xl font-semibold text-slate-900">How It Works</h2>
-        <p className="text-sm text-slate-600 mt-1">
-          Simple, flexible subscription for fresh homemade snacks.
+        <h2 className="text-[1.075rem] leading-[1.55rem] md:text-[1.65rem] md:leading-[2rem] font-semibold text-slate-900">{t('how_it_works_title')}</h2>
+        <p className="text-[0.775rem] leading-[1.25rem] md:text-base text-slate-600 mt-1">
+          {t('how_it_works_desc')}
         </p>
       </div>
       <div className="grid md:grid-cols-3 gap-6">
@@ -18,27 +21,27 @@ const HowItWorks: React.FC<HowItWorksProps> = ({ onNavigate }) => {
           <div className="w-9 h-9 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-sm">
             1
           </div>
-          <h3 className="font-semibold text-slate-900 text-sm">Choose a plan</h3>
-          <p className="text-xs text-slate-600">
-            Pick a monthly or bi-weekly snack box that matches your cravings.
+          <h3 className="font-semibold text-slate-900 text-[0.775rem] leading-[1.25rem]">{t('step_1_title')}</h3>
+          <p className="text-[0.775rem] leading-[1.25rem] text-slate-600">
+            {t('step_1_desc')}
           </p>
         </div>
         <div className="rounded-2xl border bg-white p-5 shadow-sm flex flex-col gap-2">
           <div className="w-9 h-9 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-sm">
             2
           </div>
-          <h3 className="font-semibold text-slate-900 text-sm">Choose delivery day</h3>
-          <p className="text-xs text-slate-600">
-            Select the day that works best for you. We’ll plan our cooking around it.
+          <h3 className="font-semibold text-slate-900 text-[0.775rem] leading-[1.25rem]">{t('step_2_title')}</h3>
+          <p className="text-[0.775rem] leading-[1.25rem] text-slate-600">
+            {t('step_2_desc')}
           </p>
         </div>
         <div className="rounded-2xl border bg-white p-5 shadow-sm flex flex-col gap-2">
           <div className="w-9 h-9 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-sm">
             3
           </div>
-          <h3 className="font-semibold text-slate-900 text-sm">Enjoy fresh snacks</h3>
-          <p className="text-xs text-slate-600">
-            Receive freshly prepared homemade snacks at your doorstep.
+          <h3 className="font-semibold text-slate-900 text-[0.775rem] leading-[1.25rem]">{t('step_3_title')}</h3>
+          <p className="text-[0.775rem] leading-[1.25rem] text-slate-600">
+            {t('step_3_desc')}
           </p>
         </div>
       </div>

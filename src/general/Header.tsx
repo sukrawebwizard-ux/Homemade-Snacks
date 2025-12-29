@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useLanguage } from "../lib/LanguageContext";
 
 interface HeaderProps {
   onNavigate: (to: string) => void;
@@ -6,10 +7,38 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
   const [open, setOpen] = useState(false);
+  const { language, setLanguage } = useLanguage();
 
   const handleNav = (to: string) => {
     onNavigate(to);
     setOpen(false); // close mobile menu after navigation
+  };
+
+  const toggleLanguage = () => {
+    switch (language) {
+      case 'en': setLanguage('ml'); break;
+      case 'ml': setLanguage('hi'); break;
+      case 'hi': setLanguage('ta'); break;
+      case 'ta': setLanguage('te'); break;
+      case 'te': setLanguage('kn'); break;
+      case 'kn': setLanguage('mt'); break;
+      case 'mt': setLanguage('en'); break;
+      default: setLanguage('en');
+    }
+    setOpen(false);
+  };
+
+  const getNextLanguageLabel = () => {
+    switch (language) {
+      case 'en': return 'മലയാളം';
+      case 'ml': return 'हिंदी';
+      case 'hi': return 'தமிழ்';
+      case 'ta': return 'తెలుగు';
+      case 'te': return 'ಕನ್ನಡ';
+      case 'kn': return 'Malti';
+      case 'mt': return 'English';
+      default: return 'English';
+    }
   };
 
   return (
@@ -61,10 +90,10 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
             </button>
 
             <button
-              onClick={() => handleNav("/plans")}
-              className="rounded-full bg-amber-500 px-4 py-1.5 text-sm font-semibold text-white shadow-sm transition hover:bg-amber-600"
+              className="hover:text-amber-600 transition-colors font-semibold text-amber-800 bg-amber-50 px-3 py-1 rounded-full text-xs shadow-sm border border-amber-100"
+              onClick={toggleLanguage}
             >
-              Subscribe Now
+              {getNextLanguageLabel()}
             </button>
           </nav>
 
@@ -97,6 +126,13 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
           <nav className="border-t border-amber-100 bg-white md:hidden">
             <div className="mx-auto flex max-w-5xl flex-col px-4 py-2 text-sm font-medium text-slate-800">
               <button
+                className="w-full rounded-md px-2 py-2 text-left hover:bg-amber-50 flex items-center justify-between"
+                onClick={toggleLanguage}
+              >
+                <span>Language</span>
+                <span className="text-amber-600 font-bold">{getNextLanguageLabel()}</span>
+              </button>
+              <button
                 className="w-full rounded-md px-2 py-2 text-left hover:bg-amber-50"
                 onClick={() => handleNav("/")}
               >
@@ -113,12 +149,6 @@ const Header: React.FC<HeaderProps> = ({ onNavigate }) => {
                 onClick={() => handleNav("/contact")}
               >
                 Contact
-              </button>
-              <button
-                className="mt-2 w-full rounded-full bg-amber-500 px-4 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-amber-600"
-                onClick={() => handleNav("/plans")}
-              >
-                Subscribe Now
               </button>
             </div>
           </nav>
