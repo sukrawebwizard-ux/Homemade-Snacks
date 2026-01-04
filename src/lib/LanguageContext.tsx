@@ -418,7 +418,19 @@ export const translations: Record<string, Record<Language, string>> = {
 
 
 export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [language, setLanguage] = useState<Language>('en');
+    const [language, setLanguageState] = useState<Language>(() => {
+        const saved = localStorage.getItem('app_language');
+        const validLanguages: Language[] = ['en', 'ml', 'hi', 'ta', 'te', 'kn', 'mt'];
+        if (saved && validLanguages.includes(saved as Language)) {
+            return saved as Language;
+        }
+        return 'en';
+    });
+
+    const setLanguage = (lang: Language) => {
+        setLanguageState(lang);
+        localStorage.setItem('app_language', lang);
+    };
 
     const t = (key: string): string => {
         if (!translations[key]) return key;

@@ -12,6 +12,7 @@ import NotSureWhichPlanCTA from "./components/NotSureWhichPlanCTA";
 import SubscriptionDetails from "./components/SubscriptionDetails";
 import { MOCK_PLANS, type Plan } from "./subscriptionData";
 import { LanguageProvider } from "./lib/LanguageContext";
+import LanguageSelectorModal from "./components/LanguageSelectorModal";
 
 const getRelativePath = (): string => {
   const base = import.meta.env.BASE_URL || "/"; // "/" locally, "/Homemade-Snacks/" on GitHub
@@ -197,6 +198,19 @@ const App: React.FC = () => {
     );
   }
 
+  /* Check for language preference on load */
+  const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false);
+
+  useEffect(() => {
+    // Check if user has already selected a language
+    const hasLanguagePreference = localStorage.getItem('app_language');
+    if (!hasLanguagePreference) {
+      // Small delay for better UX
+      const timer = setTimeout(() => setIsLanguageModalOpen(true), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
   return (
     <LanguageProvider>
       <div className="min-h-screen flex flex-col bg-gradient-to-b from-amber-50/60 via-white to-slate-50 text-slate-900">
@@ -213,6 +227,10 @@ const App: React.FC = () => {
         )}
         <div className="flex-1">{page}</div>
         <Footer />
+        <LanguageSelectorModal
+          isOpen={isLanguageModalOpen}
+          onClose={() => setIsLanguageModalOpen(false)}
+        />
       </div>
     </LanguageProvider>
   );
