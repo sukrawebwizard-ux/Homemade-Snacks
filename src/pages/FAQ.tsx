@@ -5,7 +5,7 @@ const FAQ: React.FC = () => {
   const { t } = useLanguage();
 
   return (
-    <section className="mt-4 rounded-2xl border bg-white p-5 shadow-sm">
+    <section id="faq" className="mt-4 rounded-2xl border bg-white p-5 shadow-sm">
       <h2 className="text-lg font-semibold text-slate-900 mb-3">
         {t('faq_title')}
       </h2>

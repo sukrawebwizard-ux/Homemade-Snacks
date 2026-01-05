@@ -571,6 +571,15 @@ export const translations: Record<string, Record<Language, string>> = {
         kn: "ಹೌದು! ನೀವು ಯಾವುದೇ ಶುಲ್ಕ ಅಥವಾ ಶುಲ್ಕಗಳಿಲ್ಲದೆ ಯಾವಾಗ ಬೇಕಾದರೂ ನಿಮ್ಮ ಚಂದಾದಾರಿಕೆಯನ್ನು ರದ್ದುಗೊಳಿಸಬಹುದು. ನಾವು ನಿಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಿದ ಅದೇ ಸಂಖ್ಯೆಯಲ್ಲಿ WhatsApp ಮೂಲಕ ಸಂಪರ್ಕಿಸಿ, ಮತ್ತು ನಾವು ನಿಮ್ಮನ್ನು ನಮ್ಮ ಚಂದಾದಾರಿಕೆ ಪಟ್ಟಿಯಿಂದ ತೆಗೆದುಹಾಕುತ್ತೇವೆ. ಭವಿಷ್ಯದಲ್ಲಿ ಮತ್ತೆ ಸೇರಲು ನೀವು ಬಯಸಿದರೆ, ನೀವು ಯಾವಾಗಲೂ ಸ್ವಾಗತ.",
         mt: "Iva! Tista' tikkanċella l-abbonament tiegħek kull meta trid mingħajr ħlasijiet jew tariffi. Sempliċement ikkuntattjana permezz ta' WhatsApp fuq l-istess numru li aħna kkuntattjajna, u aħna nneħħuk mil-lista tal-abbonamenti tagħna. Jekk tixtieq terġa' tingħaqad fil-futur, dejjem tkun milqugħ lura.",
     },
+    faq_float_text: {
+        en: "Still confused? Read FAQ",
+        ml: "ഇനിയും ആശയക്കുഴപ്പമുണ്ടോ? FAQ വായിക്കൂ",
+        hi: "अभी भी भ्रमित हैं? FAQ पढ़ें",
+        ta: "இன்னும் குழப்பமா? FAQ படிக்கவும்",
+        te: "ఇంకా అయోమయంలో ఉన్నారా? FAQ చదవండి",
+        kn: "ಇನ್ನೂ ಗೊಂದಲವಿದೆಯೇ? FAQ ಓದಿ",
+        mt: "Għadek konfuż? Aqra l-FAQ",
+    },
 };
 
 

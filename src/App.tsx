@@ -10,6 +10,7 @@ import FAQ from "./pages/FAQ";
 import ChooseYourSubscriptionPlan from "./components/ChooseYourSubscriptionPlan";
 import NotSureWhichPlanCTA from "./components/NotSureWhichPlanCTA";
 import SubscriptionDetails from "./components/SubscriptionDetails";
+import FloatingFAQButton from "./components/FloatingFAQButton";
 import { MOCK_PLANS, type Plan } from "./subscriptionData";
 import { LanguageProvider } from "./lib/LanguageContext";
 import LanguageSelectorModal from "./components/LanguageSelectorModal";
@@ -108,6 +109,7 @@ const App: React.FC = () => {
         <HeroSection onNavigate={navigate} />
         <HowItWorks onNavigate={navigate} />
         <FeaturedSnacks />
+        <FloatingFAQButton onNavigate={navigate} />
       </main>
     );
   } else if (cleanPath === "/plans") {
