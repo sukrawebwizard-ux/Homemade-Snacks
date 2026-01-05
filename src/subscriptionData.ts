@@ -45,7 +45,7 @@ export const MOCK_PLANS: Plan[] = [
     description: "A fresh selection of homemade snacks every month.",
     price: 15.0,
     default_frequency: "monthly",
-    delivery_days_available: ["sunday", "wednesday", "saturday"],
+    delivery_days_available: ["sunday", "saturday"],
     items: [
       { product_id: 1, product_name: "Unniyappam", quantity: 10 },
       { product_id: 2, product_name: "Banana Chips (Sweet)", quantity: 1 },
@@ -72,7 +72,7 @@ export const MOCK_PLANS: Plan[] = [
       "One-time sample box with a curated mix of sweet, spicy and salted snacks. No recurring subscription.",
     price: 10.0,
     default_frequency: "sample", // used just to satisfy the type; user sees it's one-time in the description
-    delivery_days_available: ["sunday", "wednesday", "saturday"],
+    delivery_days_available: ["sunday", "saturday"],
     items: [
       { product_id: 1, product_name: "Unniyappam", quantity: 6 },
       { product_id: 2, product_name: "Banana Chips (Sweet)", quantity: 1 },
@@ -88,8 +88,8 @@ export const SNACKS: Snack[] = [
     id: 1,
     name: "Unniyappam",
     description: "Traditional Kerala sweet made with rice flour, banana & jaggery.",
-    unit: "10 pcs",
-    price: 3.0,
+    unit: "1 pc",
+    price: 0.30,
     category: "sweets",
     image: new URL("/snacks/unniyappam.png", import.meta.url).href
   },
@@ -115,8 +115,8 @@ export const SNACKS: Snack[] = [
     id: 4,
     name: "Cutlets (Chicken)",
     description: "Spicy Kerala-style chicken cutlets.",
-    unit: "3 pcs",
-    price: 5.0,
+    unit: "1 pc",
+    price: 2.0,
     category: "spicy",
     image: new URL("/snacks/cutlets.jpg", import.meta.url).href
   },
@@ -124,8 +124,8 @@ export const SNACKS: Snack[] = [
     id: 5,
     name: "Cutlets (Beef)",
     description: "Homemade beef cutlets with spices.",
-    unit: "3 pcs",
-    price: 5.0,
+    unit: "1 pc",
+    price: 2.50,
     category: "spicy",
     image: new URL("/snacks/cutlets.jpg", import.meta.url).href
   },
@@ -133,8 +133,8 @@ export const SNACKS: Snack[] = [
     id: 6,
     name: "Cutlets (Veg)",
     description: "Mixed vegetable Kerala cutlets.",
-    unit: "3 pcs",
-    price: 5.0,
+    unit: "1 pc",
+    price: 2.0,
     category: "spicy",
     image: new URL("/snacks/cutlets.jpg", import.meta.url).href
   },

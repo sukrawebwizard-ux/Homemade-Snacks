@@ -27,6 +27,12 @@ interface SnackPreferences {
   salt: string[];
 }
 
+interface PartyItem {
+  name: string;
+  quantity: number;
+  price: number;
+}
+
 interface SubscriptionDetailsProps {
   plan: Plan;
   onSuccess: () => void; // e.g. navigate to /subscribe/thank-you
@@ -34,14 +40,10 @@ interface SubscriptionDetailsProps {
 
 const SNACK_CUSTOMIZATION = {
   sweets: [
-    "Unniyappam - 10 pcs / €3",
     "Banana chips (sweet) - 150g / €3",
     "Achappam - 10 pcs / €3",
   ],
   spicy: [
-    "Cutlets (Chicken) - 3 pcs / €5",
-    "Cutlets (Beef) - 3 pcs / €5",
-    "Cutlets (Veg) - 3 pcs / €5",
     "Mixture - 170g / €3",
     "Pakkavada - 150g / €3",
   ],
@@ -50,6 +52,15 @@ const SNACK_CUSTOMIZATION = {
     "Bombe mixture - 170g / €3",
   ],
 };
+
+const PARTY_ITEMS = [
+  { name: "Vegetable Cutlet", price: 2.0, popular: false },
+  { name: "Chicken Cutlet", price: 2.0, popular: true },
+  { name: "Beef Cutlet", price: 2.50, popular: false },
+  { name: "Unniyappam", price: 0.30, popular: true },
+];
+
+const PARTY_QUANTITIES = [50, 100, 150, 200];
 
 const formatDate = (date: Date): string => {
   const year = date.getFullYear();
@@ -80,6 +91,71 @@ const getNextDeliveryDate = (start: Date, dayOfWeek: DeliveryDay): string => {
   return formatDate(next);
 };
 
+// Helper function to get the nth occurrence of a day in a month
+const getNthDayOfMonth = (year: number, month: number, dayOfWeek: number, nth: number): Date | null => {
+  const firstDay = new Date(year, month, 1);
+  const firstDayOfWeek = firstDay.getDay();
+
+  // Calculate the date of the first occurrence of the target day
+  let diff = dayOfWeek - firstDayOfWeek;
+  if (diff < 0) diff += 7;
+
+  const firstOccurrence = 1 + diff;
+  const nthOccurrence = firstOccurrence + (nth - 1) * 7;
+
+  // Check if this date exists in the month
+  const date = new Date(year, month, nthOccurrence);
+  if (date.getMonth() !== month) return null;
+
+  return date;
+};
+
+// Check if a date is a valid delivery date (2nd or 4th Saturday/Sunday)
+const isValidDeliveryDate = (date: Date): boolean => {
+  const day = date.getDay();
+  const dateNum = date.getDate();
+  const year = date.getFullYear();
+  const month = date.getMonth();
+
+  // Must be Saturday (6) or Sunday (0)
+  if (day !== 0 && day !== 6) return false;
+
+  // Check if it's the 2nd or 4th occurrence
+  const secondOccurrence = getNthDayOfMonth(year, month, day, 2);
+  const fourthOccurrence = getNthDayOfMonth(year, month, day, 4);
+
+  if (secondOccurrence && dateNum === secondOccurrence.getDate()) return true;
+  if (fourthOccurrence && dateNum === fourthOccurrence.getDate()) return true;
+
+  return false;
+};
+
+// Get all valid delivery dates for the next 3 months
+const getAvailableDeliveryDates = (): Date[] => {
+  const dates: Date[] = [];
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  // Look ahead 3 months
+  for (let monthOffset = 0; monthOffset < 3; monthOffset++) {
+    const targetDate = new Date(today.getFullYear(), today.getMonth() + monthOffset, 1);
+    const year = targetDate.getFullYear();
+    const month = targetDate.getMonth();
+
+    // Get 2nd and 4th Saturday and Sunday
+    [0, 6].forEach(dayOfWeek => { // 0 = Sunday, 6 = Saturday
+      [2, 4].forEach(nth => {
+        const date = getNthDayOfMonth(year, month, dayOfWeek, nth);
+        if (date && date >= today) {
+          dates.push(date);
+        }
+      });
+    });
+  }
+
+  return dates.sort((a, b) => a.getTime() - b.getTime());
+};
+
 const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
   plan,
   onSuccess,
@@ -94,7 +170,8 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
     // for sample box, we still store a valid frequency internally (monthly)
     frequency: (plan.default_frequency || "monthly") as Frequency,
     delivery_day:
-      (plan.delivery_days_available?.[0] || "wednesday") as DeliveryDay,
+      (plan.delivery_days_available?.[0] || "saturday") as DeliveryDay,
+    delivery_date: "", // New field for selected delivery date
     preferred_payment_method: "cash",
     notes: "",
   });
@@ -104,6 +181,10 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
     spicy: [],
     salt: [],
   });
+
+  const [partyItems, setPartyItems] = useState<PartyItem[]>([]);
+
+  const [activeSnackTab, setActiveSnackTab] = useState<"sweets" | "spicy" | "salt">("sweets");
 
   const [errors, setErrors] = useState<Record<string, string | undefined>>({});
   const [submitting, setSubmitting] = useState(false);
@@ -126,6 +207,11 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
       }
     });
 
+    // Add party items total
+    partyItems.forEach((item) => {
+      total += item.quantity * item.price;
+    });
+
     return total;
   };
 
@@ -136,7 +222,7 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
       ...prev,
       frequency: plan.default_frequency || "monthly",
       delivery_day:
-        (plan.delivery_days_available?.[0] || prev.delivery_day) ?? "wednesday",
+        (plan.delivery_days_available?.[0] || prev.delivery_day) ?? "saturday",
     }));
   }, [plan.id, plan.default_frequency, plan.delivery_days_available]);
 
@@ -159,6 +245,24 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
     });
   };
 
+  const updatePartyItem = (name: string, quantity: number, price: number) => {
+    setPartyItems((prev) => {
+      const existing = prev.find((item) => item.name === name);
+      if (quantity === 0) {
+        // Remove item if quantity is 0
+        return prev.filter((item) => item.name !== name);
+      }
+      if (existing) {
+        // Update existing item
+        return prev.map((item) =>
+          item.name === name ? { ...item, quantity, price } : item
+        );
+      }
+      // Add new item
+      return [...prev, { name, quantity, price }];
+    });
+  };
+
   const validate = () => {
     const newErrors: Record<string, string> = {};
     if (!form.customer_name.trim())
@@ -167,11 +271,25 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
       newErrors.phone = "Phone (WhatsApp) is required";
     if (!form.address.trim())
       newErrors.address = "Address / delivery area is required";
-    if (!form.delivery_day)
-      newErrors.delivery_day = "Delivery day is required";
+    if (!form.delivery_date)
+      newErrors.delivery_date = "Delivery date is required";
     if (!form.preferred_payment_method)
       newErrors.preferred_payment_method =
         "Preferred payment method is required";
+
+    // For sample box (one-time orders), require at least one selection
+    if (isSampleBox) {
+      const hasSnackSelection =
+        snackPreferences.sweets.length > 0 ||
+        snackPreferences.spicy.length > 0 ||
+        snackPreferences.salt.length > 0;
+      const hasPartySelection = partyItems.length > 0;
+
+      if (!hasSnackSelection && !hasPartySelection) {
+        newErrors.snack_preferences =
+          "Please select at least one item from 'Customize your snack box' or 'Party Orders'";
+      }
+    }
 
     // frequency is always set internally; we don't need a separate error for sample box
     return newErrors;
@@ -190,10 +308,13 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
 
     const today = new Date();
     const start_date = formatDate(today);
-    const next_delivery_date = getNextDeliveryDate(
-      today,
-      form.delivery_day as DeliveryDay
-    );
+    const next_delivery_date = form.delivery_date; // Use the selected date directly
+
+    // Extract day of week from selected date
+    const selectedDate = new Date(form.delivery_date);
+    const dayOfWeek = selectedDate.getDay();
+    const dayNames: DeliveryDay[] = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+    const delivery_day_of_week = dayNames[dayOfWeek];
 
     const apiFrequency =
       form.frequency === "bi-weekly" ? "biweekly" : form.frequency; // "monthly" or for sample box treated as monthly
@@ -206,7 +327,7 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
       customer_email: form.email.trim() || null,
       address: form.address.trim(),
       frequency: apiFrequency,
-      delivery_day_of_week: form.delivery_day,
+      delivery_day_of_week: delivery_day_of_week,
       preferred_payment_method: form.preferred_payment_method,
       start_date,
       next_delivery_date,
@@ -215,15 +336,18 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
       customer_external_id: null,
       status: "pending",
       snack_preferences: snackPreferences,
+      party_items: partyItems,
 
       plan_id: plan.id,
       phone: form.phone.trim(),
       email: form.email.trim() || null,
-      delivery_day: form.delivery_day,
+      delivery_day: delivery_day_of_week,
     };
 
     try {
       console.log("Submitting subscription payload", payload);
+      console.log("Party Items:", partyItems);
+      console.log("Snack Preferences:", snackPreferences);
 
       const body = {
         subscription_plan_id: payload.subscription_plan_id,
@@ -242,6 +366,7 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
         source: payload.source,
         customer_external_id: payload.customer_external_id,
         snack_preferences: snackPreferences,
+        party_items: partyItems,
       };
 
       const { data, error } = await supabase
@@ -274,7 +399,7 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
   return (
     <section className="rounded-2xl border bg-white p-5 shadow-sm">
       <h2 className="text-lg font-semibold text-slate-900 mb-1">
-        Subscription Details
+        {isSampleBox ? "One-Time Order Details" : "Subscription Details"}
       </h2>
       <p className="text-xs text-slate-600 mb-4">
         Fill in your details and we’ll confirm your{" "}
@@ -382,32 +507,35 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
 
           <div>
             <label className="block font-medium text-slate-800 mb-1">
-              Select Delivery Day <span className="text-rose-500">*</span>
+              Select Delivery Date <span className="text-rose-500">*</span>
             </label>
             <select
               className="w-full rounded-md border px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-amber-400"
-              value={form.delivery_day}
-              onChange={(e) => updateField("delivery_day", e.target.value)}
+              value={form.delivery_date}
+              onChange={(e) => updateField("delivery_date", e.target.value)}
             >
-              {[
-                "monday",
-                "tuesday",
-                "wednesday",
-                "thursday",
-                "friday",
-                "saturday",
-                "sunday",
-              ].map((day) => (
-                <option key={day} value={day}>
-                  {day.charAt(0).toUpperCase() + day.slice(1)}
-                </option>
-              ))}
+              <option value="">-- Select a delivery date --</option>
+              {getAvailableDeliveryDates().map((date) => {
+                const dateStr = formatDate(date);
+                const dayName = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][date.getDay()];
+                const monthName = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][date.getMonth()];
+                const displayText = `${dayName}, ${monthName} ${date.getDate()}, ${date.getFullYear()}`;
+
+                return (
+                  <option key={dateStr} value={dateStr}>
+                    {displayText}
+                  </option>
+                );
+              })}
             </select>
-            {errors.delivery_day && (
+            {errors.delivery_date && (
               <p className="mt-1 text-[11px] text-rose-600">
-                {errors.delivery_day}
+                {errors.delivery_date}
               </p>
             )}
+            <p className="mt-1 text-[10px] text-slate-500">
+              Only 2nd & 4th Saturday/Sunday of each month are available
+            </p>
           </div>
         </div>
 
@@ -455,81 +583,203 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
           <p className="block font-medium text-slate-800 mb-1">
             Customize your snack box
           </p>
-          <p className="text-[11px] text-slate-500 mb-2">
-            Choose what you’d like to see more often in your subscription.
-            We’ll do our best to match your preferences.
+          <p className="text-[11px] text-slate-500 mb-3">
+            Choose what you'd like to see more often in your subscription.
+            We'll do our best to match your preferences.
           </p>
-          <div className="grid md:grid-cols-3 gap-3 text-[11px]">
-            {/* Sweets */}
-            <div className="rounded-xl border bg-slate-50 p-3">
-              <p className="font-semibold text-slate-800 mb-1 flex items-center gap-1">
-                <span>🍬</span> Sweets
-              </p>
-              <div className="space-y-1">
-                {SNACK_CUSTOMIZATION.sweets.map((item) => (
-                  <label
-                    key={item}
-                    className="flex items-center gap-2 cursor-pointer"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={snackPreferences.sweets.includes(item)}
-                      onChange={() =>
-                        toggleSnackPreference("sweets", item)
-                      }
-                    />
-                    <span>{item}</span>
-                  </label>
-                ))}
-              </div>
+
+          {/* Unified Card Container */}
+          <div className="rounded-xl border border-slate-200 overflow-hidden shadow-sm bg-white">
+            {/* Tab Navigation */}
+            <div className="flex gap-1 border-b border-slate-200 bg-slate-50/50 px-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setActiveSnackTab("sweets")}
+                className={`relative px-4 py-2 text-xs font-medium transition-all rounded-t-lg ${activeSnackTab === "sweets"
+                  ? "text-amber-700 bg-white"
+                  : "text-slate-600 hover:text-slate-800 hover:bg-white/50"
+                  }`}
+              >
+                <span className="flex items-center gap-1.5">
+                  <span>🍬</span> Sweets
+                </span>
+                {activeSnackTab === "sweets" && (
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-amber-400 to-orange-400" />
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveSnackTab("spicy")}
+                className={`relative px-4 py-2 text-xs font-medium transition-all rounded-t-lg ${activeSnackTab === "spicy"
+                  ? "text-amber-700 bg-white"
+                  : "text-slate-600 hover:text-slate-800 hover:bg-white/50"
+                  }`}
+              >
+                <span className="flex items-center gap-1.5">
+                  <span>🌶️</span> Spicy
+                </span>
+                {activeSnackTab === "spicy" && (
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-amber-400 to-orange-400" />
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveSnackTab("salt")}
+                className={`relative px-4 py-2 text-xs font-medium transition-all rounded-t-lg ${activeSnackTab === "salt"
+                  ? "text-amber-700 bg-white"
+                  : "text-slate-600 hover:text-slate-800 hover:bg-white/50"
+                  }`}
+              >
+                <span className="flex items-center gap-1.5">
+                  <span>🧂</span> Salt
+                </span>
+                {activeSnackTab === "salt" && (
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-amber-400 to-orange-400" />
+                )}
+              </button>
             </div>
-            {/* Spicy */}
-            <div className="rounded-xl border bg-slate-50 p-3">
-              <p className="font-semibold text-slate-800 mb-1 flex items-center gap-1">
-                <span>🌶️</span> Spicy
-              </p>
-              <div className="space-y-1">
-                {SNACK_CUSTOMIZATION.spicy.map((item) => (
-                  <label
-                    key={item}
-                    className="flex items-center gap-2 cursor-pointer"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={snackPreferences.spicy.includes(item)}
-                      onChange={() =>
-                        toggleSnackPreference("spicy", item)
-                      }
-                    />
-                    <span>{item}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-            {/* Salt */}
-            <div className="rounded-xl border bg-slate-50 p-3">
-              <p className="font-semibold text-slate-800 mb-1 flex items-center gap-1">
-                <span>🧂</span> Salt
-              </p>
-              <div className="space-y-1">
-                {SNACK_CUSTOMIZATION.salt.map((item) => (
-                  <label
-                    key={item}
-                    className="flex items-center gap-2 cursor-pointer"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={snackPreferences.salt.includes(item)}
-                      onChange={() =>
-                        toggleSnackPreference("salt", item)
-                      }
-                    />
-                    <span>{item}</span>
-                  </label>
-                ))}
-              </div>
+
+            {/* Tab Content with Glassmorphism */}
+            <div className="snack-tab-content p-4 min-h-[140px]">
+              {activeSnackTab === "sweets" && (
+                <div className="grid md:grid-cols-2 gap-3 text-[11px]">
+                  {SNACK_CUSTOMIZATION.sweets.map((item) => (
+                    <label
+                      key={item}
+                      className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-white/80 cursor-pointer transition-all"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={snackPreferences.sweets.includes(item)}
+                        onChange={() => toggleSnackPreference("sweets", item)}
+                        className="snack-checkbox"
+                      />
+                      <span className="text-slate-700">{item}</span>
+                    </label>
+                  ))}
+                </div>
+              )}
+
+              {activeSnackTab === "spicy" && (
+                <div className="grid md:grid-cols-2 gap-3 text-[11px]">
+                  {SNACK_CUSTOMIZATION.spicy.map((item) => (
+                    <label
+                      key={item}
+                      className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-white/80 cursor-pointer transition-all"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={snackPreferences.spicy.includes(item)}
+                        onChange={() => toggleSnackPreference("spicy", item)}
+                        className="snack-checkbox"
+                      />
+                      <span className="text-slate-700">{item}</span>
+                    </label>
+                  ))}
+                </div>
+              )}
+
+              {activeSnackTab === "salt" && (
+                <div className="grid md:grid-cols-2 gap-3 text-[11px]">
+                  {SNACK_CUSTOMIZATION.salt.map((item) => (
+                    <label
+                      key={item}
+                      className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-white/80 cursor-pointer transition-all"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={snackPreferences.salt.includes(item)}
+                        onChange={() => toggleSnackPreference("salt", item)}
+                        className="snack-checkbox"
+                      />
+                      <span className="text-slate-700">{item}</span>
+                    </label>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
+
+          {/* Party Orders - Bulk Items - Only for Sample Box (One-time orders) */}
+          {isSampleBox && (
+            <div className="mt-4">
+              <p className="block font-medium text-slate-800 mb-1 flex items-center gap-2">
+                <span>🎉</span> Party Orders (Bulk)
+              </p>
+              <p className="text-[11px] text-slate-500 mb-3">
+                Minimum order quantities for events and parties.
+              </p>
+
+              {/* Party Items List */}
+              <div className="space-y-3">
+                {PARTY_ITEMS.map((item) => {
+                  const currentItem = partyItems.find((p) => p.name === item.name);
+                  const currentQty = currentItem?.quantity || 0;
+                  const totalPrice = currentQty * item.price;
+
+                  return (
+                    <div
+                      key={item.name}
+                      className="relative rounded-xl border border-slate-200 bg-gradient-to-br from-white to-amber-50/20 p-4 hover:shadow-md transition-all"
+                    >
+                      {item.popular && (
+                        <span className="absolute -top-2 -right-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[9px] font-bold px-2 py-0.5 rounded-full shadow-sm flex items-center gap-1">
+                          ⭐ Popular
+                        </span>
+                      )}
+
+                      {/* Item Info */}
+                      <div className="flex items-start justify-between gap-3 mb-3">
+                        <div className="flex-1">
+                          <h4 className="font-semibold text-slate-800 text-sm mb-0.5">
+                            {item.name}
+                          </h4>
+                          <p className="text-[11px] text-slate-500">
+                            €{item.price.toFixed(2)} per piece
+                          </p>
+                        </div>
+                        {currentQty > 0 && (
+                          <div className="text-right">
+                            <p className="text-xs font-semibold text-amber-700">
+                              €{totalPrice.toFixed(2)}
+                            </p>
+                            <p className="text-[10px] text-slate-500">
+                              {currentQty} pcs
+                            </p>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Quantity Selector */}
+                      <div className="flex items-center gap-2">
+                        <label className="text-[11px] text-slate-600 font-medium whitespace-nowrap">
+                          Quantity:
+                        </label>
+                        <select
+                          className="party-select flex-1 max-w-[200px] rounded-lg border border-slate-300 px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-amber-400 transition-all"
+                          value={currentQty}
+                          onChange={(e) => {
+                            const qty = parseInt(e.target.value);
+                            updatePartyItem(item.name, qty, item.price);
+                          }}
+                        >
+                          <option value="0" className="party-option">Select quantity</option>
+                          {PARTY_QUANTITIES.map((qty) => (
+                            <option key={qty} value={qty} className="party-option">
+                              {qty} pieces
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           {errors.snack_preferences && (
             <p className="mt-1 text-[11px] text-rose-600">
               {errors.snack_preferences}

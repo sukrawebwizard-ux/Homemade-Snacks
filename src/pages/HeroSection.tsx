@@ -160,15 +160,10 @@ const HeroSection: React.FC<HeroSectionProps> = ({ onNavigate }) => {
           </button>
         </div>
 
-        <div className="flex items-center gap-2 text-[10px] md:text-xs text-slate-500 pt-1">
-          <span className="flex items-center justify-center w-5 h-5 rounded-full bg-[#f59e0b3d]">
-            <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" className="w-3 h-3">
-              <path d="M32 4l22 8v16c0 14-9.6 26.2-22 32C19.6 54.2 10 42 10 28V12l22-8z"
-                fill="#FF8C00" />
-            </svg>
-          </span>
-          <span>
-            {t('hero_no_card')}
+        <div className="flex items-center gap-2 text-[10px] md:text-xs text-emerald-700 bg-emerald-50 rounded-full px-3 py-1.5 w-fit">
+          <span className="text-sm">✨</span>
+          <span className="font-medium">
+            {t('hero_sample_onetime')}
           </span>
         </div>
       </div>
