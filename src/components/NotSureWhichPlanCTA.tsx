@@ -30,18 +30,18 @@ const NotSureWhichPlanCTA: React.FC<Props> = ({ onNavigate }) => {
         </ul>
       </div>
 
-      <div className="flex md:flex-col items-start md:items-end gap-2 md:gap-3">
+      <div className="flex flex-col md:flex-col items-stretch md:items-end gap-2 md:gap-3">
         <p className="text-[11px] text-amber-900/80 md:text-right">
           {t('cta_price_from')} <span className="font-semibold">€10.00</span>{" "}
           <br className="hidden md:block" />
           {t('cta_price_note')}
         </p>
         <button
-          className="inline-flex items-center gap-2 rounded-full bg-amber-600 hover:bg-amber-700 text-white px-5 py-2 text-xs font-semibold shadow-sm"
+          className="inline-flex items-center justify-center gap-2 rounded-full bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 text-xs font-semibold shadow-sm transition-colors md:whitespace-nowrap text-center"
           onClick={handleSampleClick}
         >
-          <span className="text-base">✨</span>
-          {t('cta_btn_try')}
+          <span className="text-base shrink-0">✨</span>
+          <span className="leading-tight">{t('cta_btn_try')}</span>
         </button>
       </div>
     </section>

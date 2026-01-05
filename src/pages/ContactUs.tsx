@@ -1,21 +1,23 @@
 import React from "react";
+import { useLanguage } from "../lib/LanguageContext";
 
 const ContactUs: React.FC = () => {
+  const { t } = useLanguage();
+
   return (
     <aside className="rounded-2xl border bg-white p-5 shadow-sm">
       <h1 className="text-2xl font-semibold text-slate-900 mb-2">
-        Contact Us
+        {t('contact_title')}
       </h1>
       <p className="text-sm text-slate-600 mb-4">
-        Have a question about our homemade snack subscription, delivery areas or plans? Send us
-        a message and we’ll get back to you via WhatsApp or email.
+        {t('contact_description')}
       </p>
       <div className="space-y-2 text-sm text-slate-700">
         <ul className="space-y-2 text-sm text-slate-700 list-disc pl-4">
-          <li>Ask anything about our monthly or bi-weekly snack plans</li>
-          <li>Check if we deliver to your area</li>
-          <li>Request details about bulk orders or special occasions</li>
-          <li>Share feedback or suggestions — we love hearing from you!</li>
+          <li>{t('contact_point_1')}</li>
+          <li>{t('contact_point_2')}</li>
+          <li>{t('contact_point_3')}</li>
+          <li>{t('contact_point_4')}</li>
         </ul>
       </div>
     </aside>
