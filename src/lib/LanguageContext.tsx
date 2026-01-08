@@ -85,7 +85,7 @@ export const translations: Record<string, Record<Language, string>> = {
         mt: "M’hemmx bżonn karta. Ħallas bil-flus kontanti jew Revolut mal-kunsinna.",
     },
     hero_sample_onetime: {
-        en: "Sample box is One-Time Order • No Subscription",
+        en: "Pay via Cash or Revolut only when you receive your order.",
         ml: "സാമ്പിൾ ബോക്സ് ഒറ്റത്തവണ ഓർഡറാണ് • സബ്സ്ക്രിപ്ഷൻ ഇല്ല",
         hi: "सैंपल बॉक्स एक बार का ऑर्डर है • कोई सदस्यता नहीं",
         ta: "மாதிரி பெட்டி ஒரு முறை ஆர்டர் • சந்தா இல்லை",
@@ -406,7 +406,7 @@ export const translations: Record<string, Record<Language, string>> = {
         mt: "(Il-prezz ivarja skont il-prodotti magħżula)",
     },
     cta_btn_try: {
-        en: "Try Sample Snack Box",
+        en: "One-Time Order",
         ml: "സാമ്പിൾ സ്നാക്ക് ബോക്സ് വാങ്ങൂ",
         hi: "सैंपल स्नैक बॉक्स आज़माएं",
         ta: "மாதிரி சிற்றுண்டி பெட்டியை முயற்சிக்கவும்",
