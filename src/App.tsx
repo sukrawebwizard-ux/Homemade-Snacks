@@ -14,6 +14,7 @@ import FloatingFAQButton from "./components/FloatingFAQButton";
 import { MOCK_PLANS, type Plan } from "./subscriptionData";
 import { LanguageProvider } from "./lib/LanguageContext";
 import LanguageSelectorModal from "./components/LanguageSelectorModal";
+import NotFound from "./pages/NotFound";
 
 const getRelativePath = (): string => {
   const base = import.meta.env.BASE_URL || "/"; // "/" locally, "/Homemade-Snacks/" on GitHub
@@ -182,22 +183,7 @@ const App: React.FC = () => {
       </main>
     );
   } else {
-    page = (
-      <main className="max-w-xl mx-auto px-4 pt-16 pb-20 text-center">
-        <h1 className="text-xl font-semibold text-slate-900 mb-2">
-          Page not found
-        </h1>
-        <p className="text-sm text-slate-600 mb-4">
-          The page you’re looking for doesn’t exist.
-        </p>
-        <button
-          onClick={() => navigate("/")}
-          className="inline-flex items-center justify-center rounded-full bg-amber-500 hover:bg-amber-600 text-white px-6 py-2 text-sm font-semibold shadow-sm"
-        >
-          Go to Home
-        </button>
-      </main>
-    );
+    page = <NotFound onNavigate={navigate} />;
   }
 
   /* Check for language preference on load */
