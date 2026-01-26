@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import Header from "./general/Header";
 import Footer from "./general/Footer";
 import HeroSection from "./pages/HeroSection";
@@ -219,6 +221,8 @@ const App: React.FC = () => {
           isOpen={isLanguageModalOpen}
           onClose={() => setIsLanguageModalOpen(false)}
         />
+        <Analytics />
+        <SpeedInsights />
       </div>
     </LanguageProvider>
   );
