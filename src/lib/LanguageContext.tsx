@@ -32,7 +32,7 @@ export const translations: Record<string, Record<Language, string>> = {
     },
     hero_title_2: {
         en: "Delivered to Your Door.",
-        ml: "നിങ്ങളുടെ വീട്ടുവാതിൽക്കൽ എത്തിക്കും.",
+        ml: "നിങ്ങളുടെ വീട്ടുവാതിൽക്കൽ എത്തിക്കുന്നു.",
         hi: "सीधे आपके दरवाज़े तक।",
         ta: "உங்கள் வீட்டின் வாசலுக்கு நேரடியாக டெலிவரி.",
         te: "మీ ఇంటి తలుపు వరకు డెలివరీ.",

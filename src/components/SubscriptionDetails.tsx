@@ -136,6 +136,10 @@ const getAvailableDeliveryDates = (): Date[] => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
+  // Minimum 2 days for preparation: earliest delivery is 2 days from now
+  const minDeliveryDate = new Date(today);
+  minDeliveryDate.setDate(minDeliveryDate.getDate() + 2);
+
   // Look ahead 3 months
   for (let monthOffset = 0; monthOffset < 3; monthOffset++) {
     const targetDate = new Date(today.getFullYear(), today.getMonth() + monthOffset, 1);
@@ -146,7 +150,7 @@ const getAvailableDeliveryDates = (): Date[] => {
     [0, 6].forEach(dayOfWeek => { // 0 = Sunday, 6 = Saturday
       [2, 4].forEach(nth => {
         const date = getNthDayOfMonth(year, month, dayOfWeek, nth);
-        if (date && date >= today) {
+        if (date && date >= minDeliveryDate) {
           dates.push(date);
         }
       });
@@ -465,12 +469,18 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
         </div>
 
         <div>
-          <label className="block font-medium text-slate-800 mb-1">
-            Address / Delivery Area{" "}
-            <span className="text-rose-500">*</span>
-          </label>
+          <div className="flex items-center justify-between mb-1">
+            <label className="block font-medium text-slate-800">
+              Address / Delivery Area{" "}
+              <span className="text-rose-500">*</span>
+            </label>
+            <p className="text-[10px] text-slate-500">
+              Delivery only in Malta
+            </p>
+          </div>
           <textarea
             className="w-full rounded-md border px-3 py-2 text-xs min-h-[70px] resize-y focus:outline-none focus:ring-2 focus:ring-amber-400"
+            placeholder="Address in Malta"
             value={form.address}
             onChange={(e) => updateField("address", e.target.value)}
           />
@@ -489,7 +499,7 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
             </label>
             {isSampleBox ? (
               <div className="w-full rounded-md border bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-900">
-                Sample box (one-time)
+                Single order
               </div>
             ) : (
               <select
@@ -648,7 +658,7 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
                   {SNACK_CUSTOMIZATION.sweets.map((item) => (
                     <label
                       key={item}
-                      className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-white/80 cursor-pointer transition-all"
+                      className="flex items-center gap-3 p-2.5 rounded-lg cursor-pointer"
                     >
                       <input
                         type="checkbox"
@@ -667,7 +677,7 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
                   {SNACK_CUSTOMIZATION.spicy.map((item) => (
                     <label
                       key={item}
-                      className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-white/80 cursor-pointer transition-all"
+                      className="flex items-center gap-3 p-2.5 rounded-lg cursor-pointer"
                     >
                       <input
                         type="checkbox"
@@ -686,7 +696,7 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
                   {SNACK_CUSTOMIZATION.salt.map((item) => (
                     <label
                       key={item}
-                      className="flex items-center gap-3 p-2.5 rounded-lg hover:bg-white/80 cursor-pointer transition-all"
+                      className="flex items-center gap-3 p-2.5 rounded-lg cursor-pointer"
                     >
                       <input
                         type="checkbox"
@@ -805,7 +815,7 @@ const SubscriptionDetails: React.FC<SubscriptionDetailsProps> = ({
               disabled={submitting}
               className="inline-flex items-center justify-center rounded-full bg-amber-500 hover:bg-amber-600 disabled:opacity-60 disabled:cursor-not-allowed text-white px-6 py-2 text-sm font-semibold shadow-sm"
             >
-              {submitting ? "Submitting..." : "Confirm Subscription"}
+              {submitting ? "Submitting..." : isSampleBox ? "Place Order" : "Confirm Subscription"}
             </button>
 
             <div className="flex flex-col">
